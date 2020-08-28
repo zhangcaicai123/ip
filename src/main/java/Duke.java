@@ -6,87 +6,97 @@ public class Duke {
     public static class Task {
         protected String description;
         protected boolean isDone;
+        final static String tickSymbol =  "\u2713";
+        final static String crossSymbol = "\u2718";
         public Task(String description) {
             this.description = description;
             this.isDone = false;
         }
         public String getStatusIcon() {
-            return (isDone ? "\u2713" : "\u2718"); //return tick or X symbols
+            return (isDone ? tickSymbol : crossSymbol); //return tick or X symbols
         }
         public void markedAsDone(){
             this.isDone = true;
+            printMarkMessage(this.description);
         }
-        //...
+        public static void printMarkMessage(String description) {
+            printLine();
+            System.out.println("     Nice! I've marked this task as done:");
+            System.out.println("       ["+tickSymbol+"] "+description);//print tick and the task marked
+            printLine();
+        }
+
+
     }
     public static class TaskList{
         static List<Task> Tasks;
-        static int taskNum = 0;
+        static int taskTotal = 0;
         public TaskList(){
             Tasks = new ArrayList<>();
         }
         public void addTask(Task task){
             Tasks.add(task);
-            taskNum++;
+            taskTotal++;
+            printAddTaskMessage(task.description);
         }
         public static Task findTask(int index){
             return Tasks.get(index);
         }
         public void printList(){
-            System.out.println("    ____________________________________________________________");
-            for (int i=0;i<taskNum;i++){
+            printLine();
+            for (int i=0;i<taskTotal;i++){
                 System.out.print("     ");
                 System.out.print(i+1);
                 System.out.println(".["+ findTask(i).getStatusIcon()+"] "+findTask(i).description);
             }
-            System.out.println("    ____________________________________________________________");
+            printLine();
+        }
+        public static void printAddTaskMessage(String description){
+            printLine();
+            System.out.println("     added: "+description);
+            printLine();
         }
 
     }
     public static void main(String[] args) {
-        System.out.println("    ____________________________________________________________");
-        System.out.println("     Hello！ I'm Duke");
-        System.out.println("     What can I do for you?");
-        System.out.println("    ____________________________________________________________");
-        String line;
+        printWelcomeMessage();
+        String command;
         TaskList taskList = new TaskList ();
-        Task t ;
-        Task m;
+        Task taskToAdd ;
+        Task taskToMark;
         Scanner in = new Scanner(System.in);
-        line = in.nextLine();
-
-        while(!line.equals("bye")){
-            if(line.equals("list")) taskList.printList();
-            else if(line.contains("done")){
-                int index = Integer.parseInt(line.substring(line.indexOf("e")+2));
-                m = TaskList.findTask(index-1);
-                m.markedAsDone();
-                System.out.println("    ____________________________________________________________");
-                System.out.println("     Nice! I've marked this task as done:");
-                System.out.println("       [\u2713] "+m.description);
-                System.out.println("    ____________________________________________________________");
+        command = in.nextLine();
+        while(!command.equals("bye")){
+            if(command.equals("list")) taskList.printList();
+            else if(command.contains("done")){
+                int index = Integer.parseInt(command.substring(command.indexOf("e")+2));
+                taskToMark = TaskList.findTask(index-1);
+                taskToMark.markedAsDone();
             }
             else{
-            echo(line);
-            t = new Task(line);
-            taskList.addTask(t);
+                taskToAdd = new Task(command);
+                taskList.addTask(taskToAdd);
             }
-            line = in.nextLine();
+            command = in.nextLine();
         }
-        bye();
+        printExitMessage();
 
 
     }
-    public static void echo(String line){
-        System.out.println("    ____________________________________________________________");
-        System.out.println("     added: "+line);
-        System.out.println("    ____________________________________________________________");
-    }
-    public static void bye(){
-        System.out.println("    ____________________________________________________________");
+    public static void printExitMessage(){
+        printLine();
         System.out.println("     Bye. Hope to see you again soon!");
+        printLine();
+    }
+    public static void printWelcomeMessage(){
+        printLine();
+        System.out.println("     Hello！ I'm Duke");
+        System.out.println("     What can I do for you?");
+        printLine();
+    }
+    public static void printLine(){
         System.out.println("    ____________________________________________________________");
     }
-
 
 
 }
