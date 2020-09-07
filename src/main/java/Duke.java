@@ -1,147 +1,125 @@
 import java.util.Scanner;
 
 public class Duke {
-    public static class Task {
-        protected String description;
-        protected boolean isDone;
-        final static String tickSymbol =  "\u2713";
-        final static String crossSymbol = "\u2718";
-        public Task(String description) {
-            this.description = description;
-            this.isDone = false;
-        }
-        public String getStatusIcon() {
-            return (isDone ? tickSymbol : crossSymbol); //return tick or X symbols
-        }
-        public void markedAsDone(){
-            this.isDone = true;
-            printMarkMessage(this.description);
-        }
-        public void printMarkMessage(String description) {
-            printLine();
-            System.out.println("     Nice! I've marked this task as done:");
-            System.out.println("       ["+tickSymbol+"] "+description);//print tick and the task marked
-            printLine();
-        }
-        @Override
-        public String toString (){
-            return "["+this.getStatusIcon()+ "] "+description;
-        }
-    }
-    public static class Todo extends Task{
+	private static int tasksTotal;
+	private static final Task[] tasks = new Task[100];
 
-        public Todo(String description) {
-            super(description);
-        }
-        @Override
-        public String toString(){
-            return "[T]" + super.toString();
-        }
+	public static void main(String[] args) {
+		printWelcomeMessage();
+		commandChecker();
+		printExitMessage();
+	}
 
-    }
-    public static class Deadline extends Task{
-        protected String by;
-        public Deadline(String description) {
-            super(description);
-        }
-        public void setBy(String by ){
-            this.by = by;
-        }
-        @Override
-        public String toString() {
-            return "[D]" + super.toString() + " (by: " + this.by + ")";
-        }
-    }
-    public static class Event extends Task{
-        protected String at;
-        public Event(String description) {
-            super(description);
-        }
-        public void setAt(String at ){
-            this.at = at;
-        }
-        @Override
-        public String toString(){
-            return "[E]"+super.toString()+" (at: "+this.at+")";
-        }
-    }
-    public static void main(String[] args) {
-        printWelcomeMessage();
-        String command;
-        Task [] tasks = new Task[100];
-        int tasksTotal = 0;
-        Task taskToAdd = null;
-        Task taskToMark;
-        Scanner in = new Scanner(System.in);
-        command = in.nextLine();
-        while(!command.equals("bye")){
-            if(command.equals("list")) printList(tasks, tasksTotal);
-            else if(command.contains("done")){
-                int index = Integer.parseInt(command.substring("done".length()+1));
-                taskToMark = tasks[index-1];
-                taskToMark.markedAsDone();
-            }
-            else if(command.contains("todo")||command.contains("deadline")||command.contains("event")){
-                if (command.contains("todo")) {
-                    String taskTodo = command.substring("todo".length()+1);
-                    taskToAdd = new Todo(taskTodo);
-                }
-                if(command.contains("deadline")){
-                    int position = command.indexOf("/");
-                    String taskDeadline = command.substring("deadline".length()+1,position-1);
-                    String by = command.substring(position+"/by".length()+1);
-                    taskToAdd = new Deadline(taskDeadline);
-                    ((Deadline) taskToAdd).setBy(by);
-                }
-                if(command.contains("event")){
-                    int position = command.indexOf("/");
-                    String taskEvent = command.substring("event".length()+1,position-1);
-                    String at = command.substring(position+"/at".length()+1);
-                    taskToAdd = new Event(taskEvent);
-                    ((Event) taskToAdd).setAt(at);
-                }
-                tasks[tasksTotal]=taskToAdd;
-                tasksTotal++;
-                printAddMessage(taskToAdd);
-                printNumOfTasksInList(tasksTotal);
-            }
-            command = in.nextLine();
-        }
-        printExitMessage();
+	public static void printExitMessage() {
+		printLine();
+		System.out.println("     Bye. Hope to see you again soon!");
+		printLine();
+	}
 
+	public static void printWelcomeMessage() {
+		printLine();
+		System.out.println("     Hello！ I'm Duke");
+		System.out.println("     What can I do for you?");
+		printLine();
+	}
 
-    }
-    public static void printExitMessage(){
-        printLine();
-        System.out.println("     Bye. Hope to see you again soon!");
-        printLine();
-    }
-    public static void printWelcomeMessage(){
-        printLine();
-        System.out.println("     Hello！ I'm Duke");
-        System.out.println("     What can I do for you?");
-        printLine();
-    }
-    public static void printLine(){
-        System.out.println("    ____________________________________________________________");
-    }
-    public static void printAddMessage(Task task){
-        printLine();
-        System.out.println("     Got it. I've added this task:");
-        System.out.println("      "+task);
-    }
-    public static void printNumOfTasksInList(int tasksTotal){
-        if(tasksTotal==1) System.out.println("     Now you have 1 task in the list.");
-        else System.out.println("     Now you have "+tasksTotal+" tasks in the list.");
-        printLine();
-    }
-    public static void printList(Task[] tasks,int tasksTotal){
-        printLine();
-        System.out.println("     Here are the tasks in your list:");
-        for(int i=0;i<tasksTotal;i++){
-            System.out.println("      "+(i+1)+"."+tasks[i]);
-        }
-        printLine();
-    }
+	public static void printLine() {
+		System.out.println("    ____________________________________________________________");
+	}
 
+	public static void printAddMessage(Task task) {
+		printLine();
+		System.out.println("     Got it. I've added this task:");
+		System.out.println("      " + task);
+	}
+
+	public static void printNumOfTasksInList() {
+		if (tasksTotal == 1) {
+			System.out.println("     Now you have 1 task in the list.");
+		} else {
+			System.out.println("     Now you have " + tasksTotal + " tasks in the list.");
+		}
+		printLine();
+	}
+
+	public static void printList() {
+		printLine();
+		System.out.println("     Here are the tasks in your list:");
+		for (int i = 0; i < tasksTotal; i++) {
+			System.out.println("      " + (i + 1) + "." + tasks[i]);
+		}
+		printLine();
+	}
+
+	public static void printMarkMessage(Task task) {
+		printLine();
+		System.out.println("     Nice! I've marked this task as done:");
+		System.out.println("       " + task);
+		printLine();
+	}
+
+	public static void commandChecker() {
+		Task taskToAdd;
+		Task taskToMark;
+		String command;
+		Scanner in = new Scanner(System.in);
+		command = in.nextLine();
+		while (!command.equals("bye")) {
+			String option = commandToOption(command);
+			switch (option) {
+			case "list":
+				printList();
+				break;
+			case "done":
+				taskToMark = tasks[commandToIndex(command) - 1];
+				taskToMark.markedAsDone();
+				printMarkMessage(taskToMark);
+				break;
+			case "todo":
+				taskToAdd = new Todo(commandToTask(command));
+				addTask(taskToAdd);
+				break;
+			case "deadline":
+				String by = commandToTime(command);
+				taskToAdd = new Deadline(commandToTask(command));
+				((Deadline) taskToAdd).setBy(by);
+				addTask(taskToAdd);
+				break;
+			case "event":
+				String at = commandToTime(command);
+				taskToAdd = new Event(commandToTask(command));
+				((Event) taskToAdd).setAt(at);
+				addTask(taskToAdd);
+				break;
+			}
+			command = in.nextLine();
+		}
+	}
+
+	public static void addTask(Task taskToAdd) {
+		tasks[tasksTotal] = taskToAdd;
+		tasksTotal++;
+		printAddMessage(taskToAdd);
+		printNumOfTasksInList();
+	}
+
+	public static String commandToOption(String command) {
+		if (!command.contains(" ")) return command;
+		else return command.substring(0, command.indexOf(" "));
+	}
+
+	public static String commandToTask(String command) {
+		if (command.contains("/")) return command.substring(command.indexOf(" ") + 1, command.indexOf("/"));
+		else return command.substring(command.indexOf(" ") + 1);
+	}
+
+	public static String commandToTime(String command) {
+		if (command.contains("deadline")) return command.substring(command.indexOf("/") + "by ".length() + 1);
+		if (command.contains("event")) return command.substring(command.indexOf("/") + "at ".length() + 1);
+		else return null;
+	}
+
+	public static int commandToIndex(String command) {
+		return Integer.parseInt(command.substring(command.indexOf(" ") + 1));
+	}
 }
