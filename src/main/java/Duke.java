@@ -1,11 +1,11 @@
 import java.util.Scanner;
 
-import Duke.task.Task;
-import Duke.task.Deadline;
-import Duke.task.Todo;
-import Duke.task.Event;
-import Duke.exception.*;
-import Duke.command.Command;
+import duke.task.Task;
+import duke.task.Deadline;
+import duke.task.Todo;
+import duke.task.Event;
+import duke.exception.*;
+import duke.command.Command;
 
 public class Duke {
 	private static int tasksTotal;

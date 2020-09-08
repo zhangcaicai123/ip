@@ -1,6 +1,6 @@
-package Duke.command;
+package duke.command;
 
-import Duke.exception.*;
+import duke.exception.*;
 
 public class Command {
 	private String command;
