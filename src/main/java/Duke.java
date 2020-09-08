@@ -154,7 +154,7 @@ public class Duke {
 
 	public static void printEmptyDescriptionExceptionMessage(String option) {
 		printLine();
-		System.out.println(String.format("	 ☹ OOPS!!! The description of a %s cannot be empty.", option));
+		System.out.printf("\t ☹ OOPS!!! The description of a %s cannot be empty.%n", option);
 		printLine();
 	}
 
