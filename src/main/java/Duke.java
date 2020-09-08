@@ -48,9 +48,13 @@ public class Duke {
 
 	public static void printList() {
 		printLine();
-		System.out.println("     Here are the tasks in your list:");
-		for (int i = 0; i < tasksTotal; i++) {
-			System.out.println("      " + (i + 1) + "." + tasks[i]);
+		if (tasksTotal > 0) {
+			System.out.println("     Here are the tasks in your list:");
+			for (int i = 0; i < tasksTotal; i++) {
+				System.out.println("      " + (i + 1) + "." + tasks[i]);
+			}
+		} else {
+			System.out.println("	 You don't have any task in your list.");
 		}
 		printLine();
 	}
@@ -75,9 +79,13 @@ public class Duke {
 				printList();
 				break;
 			case "done":
-				taskToMark = tasks[commandToIndex(command) - 1];
-				taskToMark.markedAsDone();
-				printMarkMessage(taskToMark);
+				try {
+					taskToMark = tasks[commandToIndex(command) - 1];
+					taskToMark.markedAsDone();
+					printMarkMessage(taskToMark);
+				} catch (OutOfIndexBound e) {
+					printOutOfIndexBoundMessage();
+				}
 				break;
 			case "todo":
 				try {
@@ -95,6 +103,8 @@ public class Duke {
 					addTask(taskToAdd);
 				} catch (EmptyDescriptionException e) {
 					printEmptyDescriptionExceptionMessage(option);
+				} catch (EmptyTimeException e) {
+					printEmptyTimeExceptionMessage(option);
 				}
 				break;
 			case "event":
@@ -105,6 +115,8 @@ public class Duke {
 					addTask(taskToAdd);
 				} catch (EmptyDescriptionException e) {
 					printEmptyDescriptionExceptionMessage(option);
+				} catch (EmptyTimeException e) {
+					printEmptyTimeExceptionMessage(option);
 				}
 				break;
 			default:
@@ -136,19 +148,31 @@ public class Duke {
 		}
 	}
 
-	public static String commandToTime(String command) {
-		if (command.contains("deadline")) return command.substring(command.indexOf("/") + "by ".length() + 1);
-		if (command.contains("event")) return command.substring(command.indexOf("/") + "at ".length() + 1);
-		else return null;
+	public static String commandToTime(String command) throws EmptyTimeException {
+		if (!command.contains("/")) {
+			throw new EmptyTimeException();
+		}
+		if (command.contains("deadline")) {
+			return command.substring(command.indexOf("/") + "by ".length() + 1);
+		}
+		if (command.contains("event")) {
+			return command.substring(command.indexOf("/") + "at ".length() + 1);
+		} else {
+			return null;
+		}
 	}
 
-	public static int commandToIndex(String command) {
-		return Integer.parseInt(command.substring(command.indexOf(" ") + 1));
+	public static int commandToIndex(String command) throws OutOfIndexBound {
+		int index = Integer.parseInt(command.substring(command.indexOf(" ") + 1));
+		if (tasksTotal < index || index < 1) {
+			throw new OutOfIndexBound();
+		}
+		return index;
 	}
 
 	public static void printIllegalCommandExceptionMessage() {
 		printLine();
-		System.out.println("	 ☹ OOPS!!! I'm sorry, but I don't know what that means :-(");
+		System.out.printf("\t ☹ OOPS!!! I'm sorry, but I don't know what that means :-(%n");
 		printLine();
 	}
 
@@ -158,4 +182,15 @@ public class Duke {
 		printLine();
 	}
 
+	public static void printEmptyTimeExceptionMessage(String option) {
+		printLine();
+		System.out.printf("\t ☹ OOPS!!! You haven't set a time for the %s.%n", option);
+		printLine();
+	}
+
+	public static void printOutOfIndexBoundMessage() {
+		printLine();
+		System.out.printf("\t ☹ OOPS!!! You seem to input wrong index of the task.%n");
+		printLine();
+	}
 }
