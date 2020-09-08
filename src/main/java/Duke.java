@@ -1,5 +1,12 @@
 import java.util.Scanner;
 
+import Duke.task.Task;
+import Duke.task.Deadline;
+import Duke.task.Todo;
+import Duke.task.Event;
+import Duke.exception.*;
+import Duke.command.Command;
+
 public class Duke {
 	private static int tasksTotal;
 	private static final Task[] tasks = new Task[100];
@@ -69,18 +76,20 @@ public class Duke {
 	public static void commandChecker() throws IllegalCommandException {
 		Task taskToAdd;
 		Task taskToMark;
-		String command;
+		Command command = new Command();
+		String input;
 		Scanner in = new Scanner(System.in);
-		command = in.nextLine();
-		while (!command.equals("bye")) {
-			String option = commandToOption(command);
+		input = in.nextLine();
+		command.setCommand(input);
+		while (!command.getCommand().equals("bye")) {
+			String option = command.commandToOption(command.getCommand());
 			switch (option) {
 			case "list":
 				printList();
 				break;
 			case "done":
 				try {
-					taskToMark = tasks[commandToIndex(command) - 1];
+					taskToMark = tasks[command.commandToIndex(command.getCommand(), tasksTotal) - 1];
 					taskToMark.markedAsDone();
 					printMarkMessage(taskToMark);
 				} catch (OutOfIndexBound e) {
@@ -89,7 +98,7 @@ public class Duke {
 				break;
 			case "todo":
 				try {
-					taskToAdd = new Todo(commandToTask(command));
+					taskToAdd = new Todo(command.commandToTask(command.getCommand()));
 					addTask(taskToAdd);
 				} catch (EmptyDescriptionException e) {
 					printEmptyDescriptionExceptionMessage(option);
@@ -97,8 +106,8 @@ public class Duke {
 				break;
 			case "deadline":
 				try {
-					String by = commandToTime(command);
-					taskToAdd = new Deadline(commandToTask(command));
+					String by = command.commandToTime(command.getCommand());
+					taskToAdd = new Deadline(command.commandToTask(command.getCommand()));
 					((Deadline) taskToAdd).setBy(by);
 					addTask(taskToAdd);
 				} catch (EmptyDescriptionException e) {
@@ -109,8 +118,8 @@ public class Duke {
 				break;
 			case "event":
 				try {
-					String at = commandToTime(command);
-					taskToAdd = new Event(commandToTask(command));
+					String at = command.commandToTime(command.getCommand());
+					taskToAdd = new Event(command.commandToTask(command.getCommand()));
 					((Event) taskToAdd).setAt(at);
 					addTask(taskToAdd);
 				} catch (EmptyDescriptionException e) {
@@ -122,7 +131,8 @@ public class Duke {
 			default:
 				throw new IllegalCommandException();
 			}
-			command = in.nextLine();
+			input = in.nextLine();
+			command.setCommand(input);
 		}
 	}
 
@@ -131,43 +141,6 @@ public class Duke {
 		tasksTotal++;
 		printAddMessage(taskToAdd);
 		printNumOfTasksInList();
-	}
-
-	public static String commandToOption(String command) {
-		if (!command.contains(" ")) return command;
-		else return command.substring(0, command.indexOf(" "));
-	}
-
-	public static String commandToTask(String command) throws EmptyDescriptionException {
-		if (!command.contains(" ")) {
-			throw new EmptyDescriptionException();
-		} else if (command.contains("/")) {
-			return command.substring(command.indexOf(" ") + 1, command.indexOf("/"));
-		} else {
-			return command.substring(command.indexOf(" ") + 1);
-		}
-	}
-
-	public static String commandToTime(String command) throws EmptyTimeException {
-		if (!command.contains("/")) {
-			throw new EmptyTimeException();
-		}
-		if (command.contains("deadline")) {
-			return command.substring(command.indexOf("/") + "by ".length() + 1);
-		}
-		if (command.contains("event")) {
-			return command.substring(command.indexOf("/") + "at ".length() + 1);
-		} else {
-			return null;
-		}
-	}
-
-	public static int commandToIndex(String command) throws OutOfIndexBound {
-		int index = Integer.parseInt(command.substring(command.indexOf(" ") + 1));
-		if (tasksTotal < index || index < 1) {
-			throw new OutOfIndexBound();
-		}
-		return index;
 	}
 
 	public static void printIllegalCommandExceptionMessage() {
