@@ -6,7 +6,11 @@ public class Duke {
 
 	public static void main(String[] args) {
 		printWelcomeMessage();
-		commandChecker();
+		try {
+			commandChecker();
+		} catch (IllegalCommandException e) {
+			printIllegalCommandExceptionMessage();
+		}
 		printExitMessage();
 	}
 
@@ -58,7 +62,7 @@ public class Duke {
 		printLine();
 	}
 
-	public static void commandChecker() {
+	public static void commandChecker() throws IllegalCommandException {
 		Task taskToAdd;
 		Task taskToMark;
 		String command;
@@ -76,21 +80,35 @@ public class Duke {
 				printMarkMessage(taskToMark);
 				break;
 			case "todo":
-				taskToAdd = new Todo(commandToTask(command));
-				addTask(taskToAdd);
+				try {
+					taskToAdd = new Todo(commandToTask(command));
+					addTask(taskToAdd);
+				} catch (EmptyDescriptionException e) {
+					printEmptyDescriptionExceptionMessage(option);
+				}
 				break;
 			case "deadline":
-				String by = commandToTime(command);
-				taskToAdd = new Deadline(commandToTask(command));
-				((Deadline) taskToAdd).setBy(by);
-				addTask(taskToAdd);
+				try {
+					String by = commandToTime(command);
+					taskToAdd = new Deadline(commandToTask(command));
+					((Deadline) taskToAdd).setBy(by);
+					addTask(taskToAdd);
+				} catch (EmptyDescriptionException e) {
+					printEmptyDescriptionExceptionMessage(option);
+				}
 				break;
 			case "event":
-				String at = commandToTime(command);
-				taskToAdd = new Event(commandToTask(command));
-				((Event) taskToAdd).setAt(at);
-				addTask(taskToAdd);
+				try {
+					String at = commandToTime(command);
+					taskToAdd = new Event(commandToTask(command));
+					((Event) taskToAdd).setAt(at);
+					addTask(taskToAdd);
+				} catch (EmptyDescriptionException e) {
+					printEmptyDescriptionExceptionMessage(option);
+				}
 				break;
+			default:
+				throw new IllegalCommandException();
 			}
 			command = in.nextLine();
 		}
@@ -108,9 +126,14 @@ public class Duke {
 		else return command.substring(0, command.indexOf(" "));
 	}
 
-	public static String commandToTask(String command) {
-		if (command.contains("/")) return command.substring(command.indexOf(" ") + 1, command.indexOf("/"));
-		else return command.substring(command.indexOf(" ") + 1);
+	public static String commandToTask(String command) throws EmptyDescriptionException {
+		if (!command.contains(" ")) {
+			throw new EmptyDescriptionException();
+		} else if (command.contains("/")) {
+			return command.substring(command.indexOf(" ") + 1, command.indexOf("/"));
+		} else {
+			return command.substring(command.indexOf(" ") + 1);
+		}
 	}
 
 	public static String commandToTime(String command) {
@@ -122,4 +145,17 @@ public class Duke {
 	public static int commandToIndex(String command) {
 		return Integer.parseInt(command.substring(command.indexOf(" ") + 1));
 	}
+
+	public static void printIllegalCommandExceptionMessage() {
+		printLine();
+		System.out.println("	 ☹ OOPS!!! I'm sorry, but I don't know what that means :-(");
+		printLine();
+	}
+
+	public static void printEmptyDescriptionExceptionMessage(String option) {
+		printLine();
+		System.out.println(String.format("	 ☹ OOPS!!! The description of a %s cannot be empty.", option));
+		printLine();
+	}
+
 }
