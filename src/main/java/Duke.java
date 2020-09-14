@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import duke.task.Task;
@@ -8,9 +9,7 @@ import duke.exception.*;
 import duke.command.Command;
 
 public class Duke {
-	private static int tasksTotal;
-	private static final Task[] tasks = new Task[100];
-
+	private static final ArrayList<Task> taskList = new ArrayList<>();
 	public static void main(String[] args) {
 		printWelcomeMessage();
 		try {
@@ -45,20 +44,20 @@ public class Duke {
 	}
 
 	public static void printNumOfTasksInList() {
-		if (tasksTotal == 1) {
+		if (taskList.size() == 1) {
 			System.out.println("     Now you have 1 task in the list.");
 		} else {
-			System.out.println("     Now you have " + tasksTotal + " tasks in the list.");
+			System.out.println("     Now you have " + taskList.size() + " tasks in the list.");
 		}
 		printLine();
 	}
 
 	public static void printList() {
 		printLine();
-		if (tasksTotal > 0) {
+		if (taskList.size() > 0) {
 			System.out.println("     Here are the tasks in your list:");
-			for (int i = 0; i < tasksTotal; i++) {
-				System.out.println("      " + (i + 1) + "." + tasks[i]);
+			for (int i = 0; i < taskList.size(); i++) {
+				System.out.println("      " + (i + 1) + "." + taskList.get(i));
 			}
 		} else {
 			System.out.println("	 You don't have any task in your list.");
@@ -89,7 +88,7 @@ public class Duke {
 				break;
 			case "done":
 				try {
-					taskToMark = tasks[command.commandToIndex(command.getCommand(), tasksTotal) - 1];
+					taskToMark = taskList.get(command.commandToIndex(command.getCommand(), taskList.size()) - 1);
 					taskToMark.markedAsDone();
 					printMarkMessage(taskToMark);
 				} catch (OutOfIndexBound e) {
@@ -137,8 +136,7 @@ public class Duke {
 	}
 
 	public static void addTask(Task taskToAdd) {
-		tasks[tasksTotal] = taskToAdd;
-		tasksTotal++;
+		taskList.add(taskToAdd);
 		printAddMessage(taskToAdd);
 		printNumOfTasksInList();
 	}
