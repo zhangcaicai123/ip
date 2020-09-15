@@ -1,5 +1,7 @@
 import java.util.Scanner;
-
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import duke.task.Task;
 import duke.task.Deadline;
 import duke.task.Todo;
@@ -10,8 +12,12 @@ import duke.command.Command;
 public class Duke {
 	private static int tasksTotal;
 	private static final Task[] tasks = new Task[100];
-
+	private static File f = null;
+	private static final String projectRoot =  System.getProperty("user.dir");
 	public static void main(String[] args) {
+		String directory = projectRoot+"/data";
+		String path = directory+"/duke.txt";
+		createFile(path, directory);
 		printWelcomeMessage();
 		try {
 			commandChecker();
@@ -102,6 +108,8 @@ public class Duke {
 					addTask(taskToAdd);
 				} catch (EmptyDescriptionException e) {
 					printEmptyDescriptionExceptionMessage(option);
+				} catch (IOException e){
+					System.out.println("Something went wrong: " + e.getMessage());
 				}
 				break;
 			case "deadline":
@@ -114,6 +122,8 @@ public class Duke {
 					printEmptyDescriptionExceptionMessage(option);
 				} catch (EmptyTimeException e) {
 					printEmptyTimeExceptionMessage(option);
+				} catch(IOException e) {
+					System.out.println("Something went wrong: " + e.getMessage());
 				}
 				break;
 			case "event":
@@ -126,6 +136,8 @@ public class Duke {
 					printEmptyDescriptionExceptionMessage(option);
 				} catch (EmptyTimeException e) {
 					printEmptyTimeExceptionMessage(option);
+				} catch(IOException e) {
+					System.out.println("Something went wrong: " + e.getMessage());
 				}
 				break;
 			default:
@@ -136,11 +148,12 @@ public class Duke {
 		}
 	}
 
-	public static void addTask(Task taskToAdd) {
+	public static void addTask(Task taskToAdd) throws IOException {
 		tasks[tasksTotal] = taskToAdd;
 		tasksTotal++;
 		printAddMessage(taskToAdd);
 		printNumOfTasksInList();
+		appendToFile(f.getPath(), String.format("%s%n", taskToAdd.text()));
 	}
 
 	public static void printIllegalCommandExceptionMessage() {
@@ -165,5 +178,27 @@ public class Duke {
 		printLine();
 		System.out.printf("\t ☹ OOPS!!! You seem to input wrong index of the task.%n");
 		printLine();
+	}
+
+	private static void appendToFile(String filePath, String textToAppend) throws IOException {
+		FileWriter fw = new FileWriter(filePath, true); // create a FileWriter in append mode
+		fw.write(textToAppend);
+		fw.close();
+	}
+	public static void createFile(String pathName,String directoryName){
+		    boolean mkdirs = createDirectory(directoryName);
+		    if(mkdirs) {
+		    	f = new File(pathName);
+			}
+	}
+
+	public static boolean createDirectory(String directoryName) {
+		File dir = new File(directoryName);
+		if (!dir.exists()) {
+			return dir.mkdirs();
+		} else {
+			return true;
+		}
+
 	}
 }

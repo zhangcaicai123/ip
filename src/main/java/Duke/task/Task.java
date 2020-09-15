@@ -23,4 +23,10 @@ public class Task {
 	public String toString() {
 		return "[" + this.getStatusIcon() + "] " + description;
 	}
+
+	public String text(){
+		if(isDone) return "| 1 | "+description;
+		else return "| 0 | "+description;
+	}
+
 }
