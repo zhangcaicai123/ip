@@ -57,8 +57,8 @@ public class Duke {
 		printLine();
 		if (taskList.size() > 0) {
 			System.out.println("     Here are the tasks in your list:");
-			for (int i = 0; i < taskList.size(); i++) {
-				System.out.println("      " + (i + 1) + "." + taskList.get(i));
+			for (Task task:taskList) {
+				System.out.println("      " + (taskList.indexOf(task) + 1) + "." + task);
 			}
 		} else {
 			System.out.println("	 You don't have any task in your list.");

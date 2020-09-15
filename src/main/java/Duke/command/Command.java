@@ -24,7 +24,7 @@ public class Command {
 		if (!command.contains(" ")) {
 			throw new EmptyDescriptionException();
 		} else if (command.contains("/")) {
-			return command.substring(command.indexOf(" ") + 1, command.indexOf("/"));
+			return command.substring(command.indexOf(" ") + 1, command.indexOf("/")-1);
 		} else {
 			return command.substring(command.indexOf(" ") + 1);
 		}
