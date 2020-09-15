@@ -10,6 +10,7 @@ import duke.command.Command;
 
 public class Duke {
 	private static final ArrayList<Task> taskList = new ArrayList<>();
+
 	public static void main(String[] args) {
 		printWelcomeMessage();
 		try {
@@ -127,6 +128,16 @@ public class Duke {
 					printEmptyTimeExceptionMessage(option);
 				}
 				break;
+			case "delete":
+				try {
+					int index = command.commandToIndex(command.getCommand(), taskList.size()) - 1;
+					printDeleteMessage(index);
+					taskList.remove(index);
+					printNumOfTasksInList();
+				} catch (OutOfIndexBound e) {
+					printOutOfIndexBoundMessage();
+				}
+				break;
 			default:
 				throw new IllegalCommandException();
 			}
@@ -163,5 +174,11 @@ public class Duke {
 		printLine();
 		System.out.printf("\t ☹ OOPS!!! You seem to input wrong index of the task.%n");
 		printLine();
+	}
+
+	public static void printDeleteMessage(int index) {
+		printLine();
+		System.out.println("	 Noted. I've removed this task:");
+		System.out.printf("\t   %s%n", taskList.get(index));
 	}
 }
