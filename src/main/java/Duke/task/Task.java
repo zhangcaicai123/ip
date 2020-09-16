@@ -24,9 +24,9 @@ public class Task {
 		return "[" + this.getStatusIcon() + "] " + description;
 	}
 
-	public String text(){
-		if(isDone) return "| 1 | "+description;
-		else return "| 0 | "+description;
+	public String text() {
+		if (isDone) return "| 1 | " + description;
+		else return "| 0 | " + description;
 	}
 
 }
