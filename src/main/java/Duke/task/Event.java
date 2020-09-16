@@ -17,7 +17,7 @@ public class Event extends Task {
 	}
 
 	@Override
-	public String text(){
-		return "E "+super.text()+" | "+at;
+	public String text() {
+		return "E " + super.text() + " | " + at;
 	}
 }

@@ -11,8 +11,8 @@ public class Todo extends Task {
 	}
 
 	@Override
-	public String text(){
-		return "T "+super.text()+" | ";
+	public String text() {
+		return "T " + super.text() + " | ";
 	}
 
 }

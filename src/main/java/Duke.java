@@ -2,6 +2,7 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+
 import duke.task.Task;
 import duke.task.Deadline;
 import duke.task.Todo;
@@ -13,10 +14,11 @@ public class Duke {
 	private static int tasksTotal;
 	private static final Task[] tasks = new Task[100];
 	private static File f = null;
-	private static final String projectRoot =  System.getProperty("user.dir");
+	private static final String projectRoot = System.getProperty("user.dir");
+
 	public static void main(String[] args) {
-		String directory = projectRoot+"/data";
-		String path = directory+"/duke.txt";
+		String directory = projectRoot + "/data";
+		String path = directory + "/duke.txt";
 		createFile(path, directory);
 		printWelcomeMessage();
 		try {
@@ -108,7 +110,7 @@ public class Duke {
 					addTask(taskToAdd);
 				} catch (EmptyDescriptionException e) {
 					printEmptyDescriptionExceptionMessage(option);
-				} catch (IOException e){
+				} catch (IOException e) {
 					System.out.println("Something went wrong: " + e.getMessage());
 				}
 				break;
@@ -122,7 +124,7 @@ public class Duke {
 					printEmptyDescriptionExceptionMessage(option);
 				} catch (EmptyTimeException e) {
 					printEmptyTimeExceptionMessage(option);
-				} catch(IOException e) {
+				} catch (IOException e) {
 					System.out.println("Something went wrong: " + e.getMessage());
 				}
 				break;
@@ -136,7 +138,7 @@ public class Duke {
 					printEmptyDescriptionExceptionMessage(option);
 				} catch (EmptyTimeException e) {
 					printEmptyTimeExceptionMessage(option);
-				} catch(IOException e) {
+				} catch (IOException e) {
 					System.out.println("Something went wrong: " + e.getMessage());
 				}
 				break;
@@ -185,11 +187,12 @@ public class Duke {
 		fw.write(textToAppend);
 		fw.close();
 	}
-	public static void createFile(String pathName,String directoryName){
-		    boolean mkdirs = createDirectory(directoryName);
-		    if(mkdirs) {
-		    	f = new File(pathName);
-			}
+
+	public static void createFile(String pathName, String directoryName) {
+		boolean mkdirs = createDirectory(directoryName);
+		if (mkdirs) {
+			f = new File(pathName);
+		}
 	}
 
 	public static boolean createDirectory(String directoryName) {

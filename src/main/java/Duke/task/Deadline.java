@@ -17,7 +17,7 @@ public class Deadline extends Task {
 	}
 
 	@Override
-	public String text(){
-		return "D "+super.text()+" | "+by;
+	public String text() {
+		return "D " + super.text() + " | " + by;
 	}
 }
