@@ -12,12 +12,9 @@ import duke.exception.*;
 import duke.command.Command;
 
 public class Duke {
-	private static int tasksTotal;
-	private static final Task[] tasks = new Task[100];
 	private static File f = null;
-	private static final String projectRoot =  System.getProperty("user.dir");
-	private static final ArrayList<Task> taskList = new ArrayList<>();
 	private static final String projectRoot = System.getProperty("user.dir");
+	private static final ArrayList<Task> taskList = new ArrayList<>();
 
 	public static void main(String[] args) {
 		String directory = projectRoot + "/data";
@@ -68,7 +65,7 @@ public class Duke {
 		printLine();
 		if (taskList.size() > 0) {
 			System.out.println("     Here are the tasks in your list:");
-			for (Task task:taskList) {
+			for (Task task : taskList) {
 				System.out.println("      " + (taskList.indexOf(task) + 1) + "." + task);
 			}
 		} else {
@@ -164,9 +161,6 @@ public class Duke {
 	}
 
 	public static void addTask(Task taskToAdd) throws IOException {
-		tasks[tasksTotal] = taskToAdd;
-		tasksTotal++;
-	public static void addTask(Task taskToAdd) {
 		taskList.add(taskToAdd);
 		printAddMessage(taskToAdd);
 		printNumOfTasksInList();
@@ -217,6 +211,7 @@ public class Duke {
 		} else {
 			return true;
 		}
+	}
 
 	public static void printDeleteMessage(int index) {
 		printLine();
