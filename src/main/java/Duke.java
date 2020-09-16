@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileWriter;
@@ -14,6 +15,8 @@ public class Duke {
 	private static final Task[] tasks = new Task[100];
 	private static File f = null;
 	private static final String projectRoot =  System.getProperty("user.dir");
+	private static final ArrayList<Task> taskList = new ArrayList<>();
+
 	public static void main(String[] args) {
 		String directory = projectRoot+"/data";
 		String path = directory+"/duke.txt";
@@ -51,20 +54,20 @@ public class Duke {
 	}
 
 	public static void printNumOfTasksInList() {
-		if (tasksTotal == 1) {
+		if (taskList.size() == 1) {
 			System.out.println("     Now you have 1 task in the list.");
 		} else {
-			System.out.println("     Now you have " + tasksTotal + " tasks in the list.");
+			System.out.println("     Now you have " + taskList.size() + " tasks in the list.");
 		}
 		printLine();
 	}
 
 	public static void printList() {
 		printLine();
-		if (tasksTotal > 0) {
+		if (taskList.size() > 0) {
 			System.out.println("     Here are the tasks in your list:");
-			for (int i = 0; i < tasksTotal; i++) {
-				System.out.println("      " + (i + 1) + "." + tasks[i]);
+			for (Task task:taskList) {
+				System.out.println("      " + (taskList.indexOf(task) + 1) + "." + task);
 			}
 		} else {
 			System.out.println("	 You don't have any task in your list.");
@@ -95,7 +98,7 @@ public class Duke {
 				break;
 			case "done":
 				try {
-					taskToMark = tasks[command.commandToIndex(command.getCommand(), tasksTotal) - 1];
+					taskToMark = taskList.get(command.commandToIndex(command.getCommand(), taskList.size()) - 1);
 					taskToMark.markedAsDone();
 					printMarkMessage(taskToMark);
 				} catch (OutOfIndexBound e) {
@@ -140,6 +143,16 @@ public class Duke {
 					System.out.println("Something went wrong: " + e.getMessage());
 				}
 				break;
+			case "delete":
+				try {
+					int index = command.commandToIndex(command.getCommand(), taskList.size()) - 1;
+					printDeleteMessage(index);
+					taskList.remove(index);
+					printNumOfTasksInList();
+				} catch (OutOfIndexBound e) {
+					printOutOfIndexBoundMessage();
+				}
+				break;
 			default:
 				throw new IllegalCommandException();
 			}
@@ -151,6 +164,8 @@ public class Duke {
 	public static void addTask(Task taskToAdd) throws IOException {
 		tasks[tasksTotal] = taskToAdd;
 		tasksTotal++;
+	public static void addTask(Task taskToAdd) {
+		taskList.add(taskToAdd);
 		printAddMessage(taskToAdd);
 		printNumOfTasksInList();
 		appendToFile(f.getPath(), String.format("%s%n", taskToAdd.text()));
@@ -200,5 +215,9 @@ public class Duke {
 			return true;
 		}
 
+	public static void printDeleteMessage(int index) {
+		printLine();
+		System.out.println("	 Noted. I've removed this task:");
+		System.out.printf("\t   %s%n", taskList.get(index));
 	}
 }
