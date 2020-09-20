@@ -1,8 +1,6 @@
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 import duke.task.Task;
 import duke.task.Deadline;
@@ -15,18 +13,16 @@ public class Duke {
 	private static File f = null;
 	private static final String projectRoot = System.getProperty("user.dir");
 	private static final ArrayList<Task> taskList = new ArrayList<>();
+	private static final String directory = projectRoot + "/data";
 
 	public static void main(String[] args) {
-		String directory = projectRoot + "/data";
 		String path = directory + "/duke.txt";
 		createFile(path, directory);
 		printWelcomeMessage();
-		try {
-			commandChecker();
-		} catch (IllegalCommandException e) {
-			printIllegalCommandExceptionMessage();
-		}
+		commandChecker();
 		printExitMessage();
+
+
 	}
 
 	public static void printExitMessage() {
@@ -81,7 +77,7 @@ public class Duke {
 		printLine();
 	}
 
-	public static void commandChecker() throws IllegalCommandException {
+	public static void commandChecker() {
 		Task taskToAdd;
 		Task taskToMark;
 		Command command = new Command();
@@ -97,11 +93,15 @@ public class Duke {
 				break;
 			case "done":
 				try {
-					taskToMark = taskList.get(command.commandToIndex(command.getCommand(), taskList.size()) - 1);
+					int index =  command.commandToIndex(command.getCommand(), taskList.size()) - 1;
+					taskToMark = taskList.get(index);
 					taskToMark.markedAsDone();
 					printMarkMessage(taskToMark);
-				} catch (OutOfIndexBound e) {
+					updateDoneToFile(index);
+				} catch (OutOfIndexBound e ) {
 					printOutOfIndexBoundMessage();
+				} catch (IOException e){
+					System.out.println("Something went wrong: " + e.getMessage());
 				}
 				break;
 			case "todo":
@@ -147,13 +147,16 @@ public class Duke {
 					int index = command.commandToIndex(command.getCommand(), taskList.size()) - 1;
 					printDeleteMessage(index);
 					taskList.remove(index);
+					deleteTaskFromFile(index);
 					printNumOfTasksInList();
-				} catch (OutOfIndexBound e) {
+				} catch (OutOfIndexBound e ) {
 					printOutOfIndexBoundMessage();
+				} catch(IOException e){
+					System.out.println("Something went wrong: " + e.getMessage());
 				}
 				break;
 			default:
-				throw new IllegalCommandException();
+				printIllegalCommandExceptionMessage();
 			}
 			input = in.nextLine();
 			command.setCommand(input);
@@ -195,6 +198,48 @@ public class Duke {
 		FileWriter fw = new FileWriter(filePath, true); // create a FileWriter in append mode
 		fw.write(textToAppend);
 		fw.close();
+	}
+
+	private static void deleteTaskFromFile(int index) throws IOException {
+		File newFile = new File(directory + "/data-new.txt");
+		BufferedReader reader = new BufferedReader(new FileReader(f));
+		PrintWriter writer = new PrintWriter(newFile);
+		String line;
+		int lineNum = 0;
+		while ((line = reader.readLine()) != null) {
+			if (lineNum == index) continue;
+			lineNum++;
+			writer.println(line);
+			writer.flush();
+		}
+		reader.close();
+		writer.close();
+
+		f.delete();
+		newFile.renameTo(f);
+	}
+
+	private static void updateDoneToFile(int index) throws IOException{
+		File newFile = new File(directory + "/data-new.txt");
+		BufferedReader reader = new BufferedReader(new FileReader(f));
+		PrintWriter writer = new PrintWriter(newFile);
+		String line;
+		int lineNum = 0;
+		while ((line = reader.readLine()) != null) {
+			if (lineNum == index) {
+				writer.println(taskList.get(index).text());
+				writer.flush();
+				continue;
+			}
+			lineNum++;
+			writer.println(line);
+			writer.flush();
+		}
+		reader.close();
+		writer.close();
+
+		f.delete();
+		newFile.renameTo(f);
 	}
 
 	public static void createFile(String pathName, String directoryName) {
