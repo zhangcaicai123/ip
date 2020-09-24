@@ -22,7 +22,7 @@ public class Duke {
 		}
 	}
 
-	public void run() {
+	public void run() throws EmptyDescriptionException {
 		ui.showWelcomeMessage();
 		boolean isExit = false;
 		while (!isExit) {
@@ -34,7 +34,7 @@ public class Duke {
 		ui.showExitMessage();
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws EmptyDescriptionException {
 		new Duke().run();
 	}
 

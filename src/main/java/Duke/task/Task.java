@@ -11,6 +11,10 @@ public class Task {
 		this.isDone = false;
 	}
 
+	public String getDescription() {
+		return this.description;
+	}
+
 	public String getStatusIcon() {
 		return (isDone ? TICK_SYMBOL : CROSS_SYMBOL); //return tick or X symbols
 	}
@@ -26,13 +30,15 @@ public class Task {
 	}
 
 	public String text() {
-		if(this.isDone)
-		return "| 1 | " + description;
+		if (this.isDone)
+			return "| 1 | " + description;
 		else return "| 0 | " + description;
 	}
+
 	private void showLine() {
 		System.out.println("    ____________________________________________________________");
 	}
+
 	private void printMarkMessage(Task task) {
 		showLine();
 		System.out.println("     Nice! I've marked this task as done:");
