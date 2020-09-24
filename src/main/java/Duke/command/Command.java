@@ -9,6 +9,10 @@ import duke.task.Todo;
 import duke.taskList.TaskList;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Locale;
+import java.util.regex.Pattern;
+import java.time.format.DateTimeFormatter;
 
 public class Command {
 	private String command;
@@ -44,17 +48,22 @@ public class Command {
 	}
 
 	public String getTime() throws EmptyTimeException {
+		String time;
 		if (!command.contains("/")) {
 			throw new EmptyTimeException();
-		}
-		if (command.contains("deadline")) {
-			return command.substring(command.indexOf("/") + "by ".length() + 1);
-		}
-		if (command.contains("event")) {
-			return command.substring(command.indexOf("/") + "at ".length() + 1);
+		} else if (command.contains("deadline")) {
+			time = command.substring(command.indexOf("/") + "by ".length() + 1);
+		} else if (command.contains("event")) {
+			time = command.substring(command.indexOf("/") + "at ".length() + 1);
 		} else {
 			return null;
 		}
+		String pattern = "\\d\\d\\d\\d\\-\\d\\d\\-\\d\\d";
+		boolean isDate = Pattern.matches(pattern, time);
+		if (isDate) {
+			LocalDate Date = LocalDate.parse(time);
+			return Date.format(DateTimeFormatter.ofPattern("MMM d yyyy", Locale.ENGLISH));
+		} else return time;
 	}
 
 	public int getIndex(TaskList taskList) throws OutOfIndexBound {
@@ -69,7 +78,7 @@ public class Command {
 		return command.equals("bye");
 	}
 
-	public void execute(TaskList taskList, Storage storage) throws EmptyDescriptionException {
+	public void execute(TaskList taskList, Storage storage) {
 		Task taskToAdd;
 		Task taskToMark;
 		String option = getOption();
@@ -104,6 +113,7 @@ public class Command {
 			try {
 				String by = getTime();
 				taskToAdd = new Deadline(getTask());
+
 				((Deadline) taskToAdd).setBy(by);
 				taskList.addTask(taskToAdd);
 				storage.appendToFile(taskToAdd.text() + System.lineSeparator());

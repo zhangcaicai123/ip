@@ -1,3 +1,6 @@
 T | 0 | read
 T | 0 | return book
 D | 0 | buy a book | 2pm
+D | 0 | sell book | 10ÔÂ 11 2020
+D | 0 | print book | 2ÔÂ 1 2023
+D | 0 | send book | Nov 11 2024

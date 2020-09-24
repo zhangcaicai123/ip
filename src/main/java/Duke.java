@@ -22,7 +22,7 @@ public class Duke {
 		}
 	}
 
-	public void run() throws EmptyDescriptionException {
+	public void run() {
 		ui.showWelcomeMessage();
 		boolean isExit = false;
 		while (!isExit) {
