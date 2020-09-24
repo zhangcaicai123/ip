@@ -7,12 +7,14 @@ import duke.task.Event;
 import duke.task.Task;
 import duke.task.Todo;
 import duke.taskList.TaskList;
+
 import java.io.IOException;
 
 public class Command {
 	private String command;
 
-	public Command() {}
+	public Command() {
+	}
 
 	public void setCommand(String command) {
 		this.command = command;
@@ -27,7 +29,15 @@ public class Command {
 		if (!command.contains(" ")) {
 			throw new EmptyDescriptionException();
 		} else if (command.contains("/")) {
-			return command.substring(command.indexOf(" ") + 1, command.indexOf("/")-1);
+			return command.substring(command.indexOf(" ") + 1, command.indexOf("/") - 1);
+		} else {
+			return command.substring(command.indexOf(" ") + 1);
+		}
+	}
+
+	public String getFind() throws EmptyFindException {
+		if (!command.contains(" ")) {
+			throw new EmptyFindException();
 		} else {
 			return command.substring(command.indexOf(" ") + 1);
 		}
@@ -55,11 +65,11 @@ public class Command {
 		return index;
 	}
 
-	public boolean isExit(){
+	public boolean isExit() {
 		return command.equals("bye");
 	}
 
-	public void execute(TaskList taskList, Storage storage){
+	public void execute(TaskList taskList, Storage storage) throws EmptyDescriptionException {
 		Task taskToAdd;
 		Task taskToMark;
 		String option = getOption();
@@ -69,13 +79,13 @@ public class Command {
 			break;
 		case "done":
 			try {
-				int index =  getIndex(taskList) - 1;
+				int index = getIndex(taskList) - 1;
 				taskToMark = taskList.get(index);
 				taskToMark.markedAsDone();
-				storage.updateDoneToFile(index,taskList);
-			} catch (OutOfIndexBound e ) {
+				storage.updateDoneToFile(index, taskList);
+			} catch (OutOfIndexBound e) {
 				exception.printOutOfIndexBoundMessage();
-			} catch (IOException e){
+			} catch (IOException e) {
 				System.out.println("Something went wrong: " + e.getMessage());
 			}
 			break;
@@ -83,7 +93,7 @@ public class Command {
 			try {
 				taskToAdd = new Todo(getTask());
 				taskList.addTask(taskToAdd);
-				storage.appendToFile(taskToAdd.text()+System.lineSeparator());
+				storage.appendToFile(taskToAdd.text() + System.lineSeparator());
 			} catch (EmptyDescriptionException e) {
 				exception.printEmptyDescriptionExceptionMessage(option);
 			} catch (IOException e) {
@@ -96,7 +106,7 @@ public class Command {
 				taskToAdd = new Deadline(getTask());
 				((Deadline) taskToAdd).setBy(by);
 				taskList.addTask(taskToAdd);
-				storage.appendToFile(taskToAdd.text()+System.lineSeparator());
+				storage.appendToFile(taskToAdd.text() + System.lineSeparator());
 			} catch (EmptyDescriptionException e) {
 				exception.printEmptyDescriptionExceptionMessage(option);
 			} catch (EmptyTimeException e) {
@@ -111,7 +121,7 @@ public class Command {
 				taskToAdd = new Event(getTask());
 				((Event) taskToAdd).setAt(at);
 				taskList.addTask(taskToAdd);
-				storage.appendToFile(taskToAdd.text()+System.lineSeparator());
+				storage.appendToFile(taskToAdd.text() + System.lineSeparator());
 			} catch (EmptyDescriptionException e) {
 				exception.printEmptyDescriptionExceptionMessage(option);
 			} catch (EmptyTimeException e) {
@@ -126,13 +136,21 @@ public class Command {
 				taskList.deleteTask(index);
 				storage.deleteTaskFromFile(index);
 				taskList.printNumOfTasksInList();
-			} catch (OutOfIndexBound e ) {
+			} catch (OutOfIndexBound e) {
 				exception.printOutOfIndexBoundMessage();
-			} catch(IOException e){
+			} catch (IOException e) {
 				System.out.println("Something went wrong: " + e.getMessage());
 			}
 			break;
-		case "bye": break;
+		case "find":
+			try {
+				String keyword = getFind();
+				taskList.printSearchResult(keyword);
+			} catch (EmptyFindException e) {
+				System.out.println("You haven't typed the keyword");
+			}
+		case "bye":
+			break;
 		default:
 			exception.printIllegalCommandExceptionMessage();
 		}
