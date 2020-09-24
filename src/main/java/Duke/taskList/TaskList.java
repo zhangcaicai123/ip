@@ -6,27 +6,31 @@ import java.util.ArrayList;
 
 public class TaskList {
 	private ArrayList<Task> taskList = new ArrayList<>();
-	public TaskList(){}
-	public TaskList(ArrayList<Task> loadedList){
+
+	public TaskList() {
+	}
+
+	public TaskList(ArrayList<Task> loadedList) {
 		this.taskList = loadedList;
 	}
-	public void addTask(Task taskToAdd){
+
+	public void addTask(Task taskToAdd) {
 		this.taskList.add(taskToAdd);
 		printAddMessage(taskToAdd);
 		printNumOfTasksInList();
 	}
-	public void deleteTask(int taskIndex){
+
+	public void deleteTask(int taskIndex) {
 		printDeleteMessage(taskIndex);
 		taskList.remove(taskIndex);
 	}
-	public Task get(int index){
+
+	public Task get(int index) {
 		return this.taskList.get(index);
 	}
-	public int size(){
+
+	public int size() {
 		return this.taskList.size();
-	}
-	public ArrayList<Task> getList(){
-		return this.taskList;
 	}
 
 	private void showLine() {
@@ -65,6 +69,28 @@ public class TaskList {
 		showLine();
 		System.out.println("	 Noted. I've removed this task:");
 		System.out.printf("\t   %s%n", this.taskList.get(index));
+	}
+
+	private ArrayList<Task> find(String keyword) {
+		ArrayList<Task> findList = new ArrayList<>();
+		for (Task task : this.taskList) {
+			if (task.getDescription().contains(keyword)) findList.add(task);
+		}
+		return findList;
+	}
+
+	public void printSearchResult(String keyword) {
+		ArrayList<Task> results = find(keyword);
+		showLine();
+		if (this.size() > 0) {
+			System.out.println("     Here are the matching tasks in your list:");
+			for (Task task : results) {
+				System.out.println("      " + (results.indexOf(task) + 1) + "." + task);
+			}
+		} else {
+			System.out.println("	 You don't have any matching task in your list.");
+		}
+		showLine();
 	}
 
 }
