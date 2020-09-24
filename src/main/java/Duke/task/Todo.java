@@ -12,7 +12,7 @@ public class Todo extends Task {
 
 	@Override
 	public String text() {
-		return "T " + super.text() + " | ";
+		return "T " + super.text() ;
 	}
 
 }
