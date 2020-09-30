@@ -20,16 +20,27 @@ public class Command {
 	public Command() {
 	}
 
+	/**
+	 * Set user's input as command in Command class
+	 * @param command
+	 */
 	public void setCommand(String command) {
 		this.command = command;
 	}
 
-	public String getOption() {
+	/**
+	 * @return user's command option e.g. todo,list,bye
+	 */
+	private String getOption() {
 		if (!command.contains(" ")) return command;
 		else return command.substring(0, command.indexOf(" "));
 	}
 
-	public String getTask() throws EmptyDescriptionException {
+	/**
+	 * @return the description of user's input task
+	 * @throws EmptyDescriptionException If description is null
+	 */
+	private String getTask() throws EmptyDescriptionException {
 		if (!command.contains(" ")) {
 			throw new EmptyDescriptionException();
 		} else if (command.contains("/")) {
@@ -39,7 +50,11 @@ public class Command {
 		}
 	}
 
-	public String getFind() throws EmptyFindException {
+	/**
+	 * @return the keyword that user wants to search in the task list
+	 * @throws EmptyFindException If no keyword is found
+	 */
+	private String getFind() throws EmptyFindException {
 		if (!command.contains(" ")) {
 			throw new EmptyFindException();
 		} else {
@@ -47,7 +62,14 @@ public class Command {
 		}
 	}
 
-	public String getTime() throws EmptyTimeException {
+	/**
+	 * Returns the time for event or deadline.
+	 * Accept dates in yyyy-mm-dd format (e.g., 2019-10-15)
+	 * and print in a different format such as MMM dd yyyy e.g., (Oct 15 2019)
+	 * @return time for event or deadline task
+	 * @throws EmptyTimeException If no String for time information is found
+	 */
+	private String getTime() throws EmptyTimeException {
 		String time;
 		if (!command.contains("/")) {
 			throw new EmptyTimeException();
@@ -58,7 +80,7 @@ public class Command {
 		} else {
 			return null;
 		}
-		String pattern = "\\d\\d\\d\\d\\-\\d\\d\\-\\d\\d";
+		String pattern = "\\d\\d\\d\\d\\-\\d\\d\\-\\d\\d";//yyyy-mm-dd format
 		boolean isDate = Pattern.matches(pattern, time);
 		if (isDate) {
 			LocalDate Date = LocalDate.parse(time);
@@ -66,7 +88,13 @@ public class Command {
 		} else return time;
 	}
 
-	public int getIndex(TaskList taskList) throws OutOfIndexBound {
+	/**
+	 *
+	 * @param taskList the list of all tasks input
+	 * @return index the index of task that user wants to delete or mark as done
+	 * @throws OutOfIndexBound If the index > size of list
+	 */
+	private int getIndex(TaskList taskList) throws OutOfIndexBound {
 		int index = Integer.parseInt(command.substring(command.indexOf(" ") + 1));
 		if (taskList.size() < index || index < 1) {
 			throw new OutOfIndexBound();
@@ -74,10 +102,19 @@ public class Command {
 		return index;
 	}
 
+	/**
+	 * @return true if user type "bye"
+	 * 	       false if not
+	 */
 	public boolean isExit() {
 		return command.equals("bye");
 	}
 
+	/**
+	 * Execute the command e.g. add task, print list
+	 * @param taskList the list of all tasks input
+	 * @param storage the file stores all tasks in the list
+	 */
 	public void execute(TaskList taskList, Storage storage) {
 		Task taskToAdd;
 		Task taskToMark;
@@ -113,7 +150,6 @@ public class Command {
 			try {
 				String by = getTime();
 				taskToAdd = new Deadline(getTask());
-
 				((Deadline) taskToAdd).setBy(by);
 				taskList.addTask(taskToAdd);
 				storage.appendToFile(taskToAdd.text() + System.lineSeparator());

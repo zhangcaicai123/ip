@@ -7,28 +7,48 @@ import java.util.ArrayList;
 public class TaskList {
 	private ArrayList<Task> taskList = new ArrayList<>();
 
-	public TaskList() {
-	}
+	public TaskList() {}
 
+	/**
+	 *Assign the loaded list to this task list
+	 * @param loadedList the task list loaded from
+	 */
 	public TaskList(ArrayList<Task> loadedList) {
 		this.taskList = loadedList;
 	}
 
+	/**
+	 * Add new task to the task list
+	 * @param taskToAdd the task that needs to be added to the list
+	 */
 	public void addTask(Task taskToAdd) {
 		this.taskList.add(taskToAdd);
 		printAddMessage(taskToAdd);
 		printNumOfTasksInList();
 	}
 
+	/**
+	 * Delete task from the task list with index of task
+	 * @param taskIndex the index of task which needs to be deleted
+	 */
 	public void deleteTask(int taskIndex) {
 		printDeleteMessage(taskIndex);
 		taskList.remove(taskIndex);
 	}
 
+	/**
+	 * Get the task with index
+	 * @param index the index of task
+	 * @return task
+	 */
 	public Task get(int index) {
 		return this.taskList.get(index);
 	}
 
+	/**
+	 * Get the total number of tasks in the list
+	 * @return the number of tasks
+	 */
 	public int size() {
 		return this.taskList.size();
 	}
@@ -37,6 +57,9 @@ public class TaskList {
 		System.out.println("    ____________________________________________________________");
 	}
 
+	/**
+	 * Print the whole list
+	 */
 	public void printList() {
 		showLine();
 		if (this.size() > 0) {
@@ -50,12 +73,18 @@ public class TaskList {
 		showLine();
 	}
 
-	public void printAddMessage(Task task) {
+	/**
+	 * 	Print the message of adding new task
+	 */
+	private void printAddMessage(Task task) {
 		showLine();
 		System.out.println("     Got it. I've added this task:");
 		System.out.println("      " + task);
 	}
 
+	/**
+	 * Print the number of tasks in the list
+	 */
 	public void printNumOfTasksInList() {
 		if (this.taskList.size() == 1) {
 			System.out.println("     Now you have 1 task in the list.");
@@ -65,12 +94,21 @@ public class TaskList {
 		showLine();
 	}
 
+	/**
+	 * Print the message of deleting a task
+	 * @param index the index of task that needs to be deleted
+	 */
 	public void printDeleteMessage(int index) {
 		showLine();
 		System.out.println("	 Noted. I've removed this task:");
 		System.out.printf("\t   %s%n", this.taskList.get(index));
 	}
 
+	/**
+	 * Find all the tasks which contain the keyword
+	 * @param keyword
+	 * @return the list of tasks which contain the keyword
+	 */
 	private ArrayList<Task> find(String keyword) {
 		ArrayList<Task> findList = new ArrayList<>();
 		for (Task task : this.taskList) {
@@ -79,6 +117,10 @@ public class TaskList {
 		return findList;
 	}
 
+	/**
+	 * Print the list of searching keyword in task list
+	 * @param keyword
+	 */
 	public void printSearchResult(String keyword) {
 		ArrayList<Task> results = find(keyword);
 		showLine();

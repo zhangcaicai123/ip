@@ -15,10 +15,10 @@ public class Duke {
 	public Duke() {
 		storage = new Storage();
 		try {
+			//load tasks in data file to current task list
 			tasks = new TaskList(storage.load());
 		} catch (DukeException e) {
 			ui.showLoadingError();
-			tasks = new TaskList();
 		}
 	}
 
@@ -34,7 +34,7 @@ public class Duke {
 		ui.showExitMessage();
 	}
 
-	public static void main(String[] args) throws EmptyDescriptionException {
+	public static void main(String[] args) {
 		new Duke().run();
 	}
 
