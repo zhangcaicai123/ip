@@ -1,2 +1,0 @@
-T | 1 | read a book
-E | 0 | attend the tutorial | Friday 4pm
