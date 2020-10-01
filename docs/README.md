@@ -6,7 +6,7 @@ This app is to help user create and edit a task list.
 1. Copy the file to the folder you want to use as the home folder for your Duke app
 1. Double-click the file to start the app.  
 If the setup is correct, you should see something like the below:  
-
+![welcome message](https://github.com/zhangcaicai123/ip/blob/master/docs/image/hello.png)
 1. Type the command in the command box and press Enter to execute it.  
     Some example commands you can try:
     - `todo read a book`
@@ -79,5 +79,5 @@ Exit the program
 Format: `exit`
 
 Expected outcomes:  
-![](https://github.com/zhangcaicai123/ip/blob/master/docs/image/exit.png)
+![exit](https://github.com/zhangcaicai123/ip/blob/master/docs/image/exit.png)
 
