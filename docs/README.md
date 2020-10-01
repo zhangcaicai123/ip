@@ -40,7 +40,7 @@ Format: `event TASK /at TIME`
 Examples: `event attend tutorial /at Friday 4pm`
 
 Expected outcomes:  
-![add](https://github.com/zhangcaicai123/ip/blob/master/docs/image/add.png)
+![add](https://github.com/zhangcaicai123/ip/blob/master/docs/image/add.png)  
 ![data file after adding](https://github.com/zhangcaicai123/ip/blob/master/docs/image/add%20file.png)  
 
 For the deadline and event,
@@ -48,31 +48,33 @@ the app also accepts dates in a format such as yyyy-mm-dd format (e.g., 2019-10-
 Format: `deadline TASK /by YYYY-MM-DD`  
 Examples: `deadline return books /by 2020-11-20`
 
-Expected outcomes:
-![time](https://github.com/zhangcaicai123/ip/blob/master/docs/image/time.png)
+Expected outcomes:  
+![time](https://github.com/zhangcaicai123/ip/blob/master/docs/image/time.png)  
+![time file](https://github.com/zhangcaicai123/ip/blob/master/docs/image/time%20file.png)  
+
 ### List `list`
 Show the task list  
 Format: `list`
 
-Expected outcomes:   
+Expected outcomes:    
 ![list](https://github.com/zhangcaicai123/ip/blob/master/docs/image/list.png)
 ### Delete `delete`
 Delete a task from task list
 Format: `delete INDEX`
 Examples: `delete 2`  
 
-Expected outcomes: 
-![delete](https://github.com/zhangcaicai123/ip/blob/master/docs/image/delete.png)
-![data file after deleting](https://github.com/zhangcaicai123/ip/blob/master/docs/image/delete%20file.png)
+Expected outcomes:   
+![delete](https://github.com/zhangcaicai123/ip/blob/master/docs/image/delete.png)  
+![data file after deleting](https://github.com/zhangcaicai123/ip/blob/master/docs/image/delete%20file.png)  
 
 ### Mark as done `done`
 Mark a task as done 
 Format: `done INDEX`
 Examples: `done 1`  
 
-Expected outcomes: 
-![done](https://github.com/zhangcaicai123/ip/blob/master/docs/image/done.png)
-![data file after marking as done](https://github.com/zhangcaicai123/ip/blob/master/docs/image/done%20file.png)
+Expected outcomes:   
+![done](https://github.com/zhangcaicai123/ip/blob/master/docs/image/done.png)  
+![data file after marking as done](https://github.com/zhangcaicai123/ip/blob/master/docs/image/done%20file.png)   
 ### Find `find`
 Find task in task list with keyword
 Format: `find KEYWORD` 
