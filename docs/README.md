@@ -4,7 +4,9 @@ This app is to help user create and edit a task list.
 1. Ensure you have Java 11 installed in your Computer.
 1. Download the jar file from (link).
 1. Copy the file to the folder you want to use as the home folder for your Duke app
-1. Double-click the file to start the app.
+1. Double-click the file to start the app.  
+If the setup is correct, you should see something like the below:  
+
 1. Type the command in the command box and press Enter to execute it.  
     Some example commands you can try:
     - `todo read a book`
@@ -37,7 +39,7 @@ Examples: `deadline return books /by 2pm`
 Format: `event TASK /at TIME`   
 Examples: `event attend tutorial /at Friday 4pm`
 
-Expected outcomes:
+Expected outcomes:  
 ![add](https://github.com/zhangcaicai123/ip/blob/master/docs/image/add.png)
 ![data file after adding](https://github.com/zhangcaicai123/ip/blob/master/docs/image/add%20file.png)
 
@@ -45,7 +47,7 @@ Expected outcomes:
 Show the task list  
 Format: `list`
 
-Expected outcomes: 
+Expected outcomes:   
 ![list](https://github.com/zhangcaicai123/ip/blob/master/docs/image/list.png)
 ### Delete `delete`
 Delete a task from task list
@@ -54,7 +56,7 @@ Examples: `delete 2`
 
 Expected outcomes: 
 ![delete](https://github.com/zhangcaicai123/ip/blob/master/docs/image/delete.png)
-![data file after deleting](https://github.com/zhangcaicai123/ip/blob/master/docs/image/delete.png)
+![data file after deleting](https://github.com/zhangcaicai123/ip/blob/master/docs/image/delete%20file.png)
 
 ### Mark as done `done`
 Mark a task as done 
@@ -69,13 +71,13 @@ Find task in task list with keyword
 Format: `find KEYWORD` 
 Examples: `find book`
 
-Expected outcomes:
+Expected outcomes:  
 ![find](https://github.com/zhangcaicai123/ip/blob/master/docs/image/find.png)
 
 ### Exit `exit`
 Exit the program
 Format: `exit`
 
-Expected outcomes:
+Expected outcomes:  
 ![](https://github.com/zhangcaicai123/ip/blob/master/docs/image/exit.png)
 
