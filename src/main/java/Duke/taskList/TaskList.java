@@ -6,19 +6,20 @@ import java.util.ArrayList;
 
 public class TaskList {
 	private ArrayList<Task> taskList = new ArrayList<>();
-
-	public TaskList() {}
-
+	public TaskList(){}
 	/**
-	 *Assign the loaded list to this task list
+	 * Assign the loaded list to this task list
+	 *
 	 * @param loadedList the task list loaded from
 	 */
+
 	public TaskList(ArrayList<Task> loadedList) {
 		this.taskList = loadedList;
 	}
 
 	/**
 	 * Add new task to the task list
+	 *
 	 * @param taskToAdd the task that needs to be added to the list
 	 */
 	public void addTask(Task taskToAdd) {
@@ -29,8 +30,10 @@ public class TaskList {
 
 	/**
 	 * Delete task from the task list with index of task
+	 *
 	 * @param taskIndex the index of task which needs to be deleted
 	 */
+
 	public void deleteTask(int taskIndex) {
 		printDeleteMessage(taskIndex);
 		taskList.remove(taskIndex);
@@ -38,17 +41,22 @@ public class TaskList {
 
 	/**
 	 * Get the task with index
+	 *
 	 * @param index the index of task
 	 * @return task
 	 */
+
 	public Task get(int index) {
 		return this.taskList.get(index);
 	}
 
+
 	/**
 	 * Get the total number of tasks in the list
+	 *
 	 * @return the number of tasks
 	 */
+
 	public int size() {
 		return this.taskList.size();
 	}
@@ -74,7 +82,7 @@ public class TaskList {
 	}
 
 	/**
-	 * 	Print the message of adding new task
+	 * Print the message of adding new task
 	 */
 	private void printAddMessage(Task task) {
 		showLine();
@@ -96,6 +104,7 @@ public class TaskList {
 
 	/**
 	 * Print the message of deleting a task
+	 *
 	 * @param index the index of task that needs to be deleted
 	 */
 	public void printDeleteMessage(int index) {
@@ -104,11 +113,14 @@ public class TaskList {
 		System.out.printf("\t   %s%n", this.taskList.get(index));
 	}
 
+
 	/**
 	 * Find all the tasks which contain the keyword
-	 * @param keyword
+	 *
+	 * @param keyword keyword to find task
 	 * @return the list of tasks which contain the keyword
 	 */
+
 	private ArrayList<Task> find(String keyword) {
 		ArrayList<Task> findList = new ArrayList<>();
 		for (Task task : this.taskList) {
@@ -119,8 +131,10 @@ public class TaskList {
 
 	/**
 	 * Print the list of searching keyword in task list
-	 * @param keyword
+	 *
+	 * @param keyword keyword to find task
 	 */
+
 	public void printSearchResult(String keyword) {
 		ArrayList<Task> results = find(keyword);
 		showLine();

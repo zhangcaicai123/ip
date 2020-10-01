@@ -22,6 +22,7 @@ public class Command {
 
 	/**
 	 * Set user's input as command in Command class
+	 *
 	 * @param command
 	 */
 	public void setCommand(String command) {
@@ -50,6 +51,7 @@ public class Command {
 		}
 	}
 
+
 	/**
 	 * @return the keyword that user wants to search in the task list
 	 * @throws EmptyFindException If no keyword is found
@@ -62,10 +64,12 @@ public class Command {
 		}
 	}
 
+
 	/**
 	 * Returns the time for event or deadline.
 	 * Accept dates in yyyy-mm-dd format (e.g., 2019-10-15)
 	 * and print in a different format such as MMM dd yyyy e.g., (Oct 15 2019)
+	 *
 	 * @return time for event or deadline task
 	 * @throws EmptyTimeException If no String for time information is found
 	 */
@@ -80,7 +84,8 @@ public class Command {
 		} else {
 			return null;
 		}
-		String pattern = "\\d\\d\\d\\d\\-\\d\\d\\-\\d\\d";//yyyy-mm-dd format
+
+		String pattern = "\\d\\d\\d\\d-\\d\\d-\\d\\d";//yyyy-mm-dd format
 		boolean isDate = Pattern.matches(pattern, time);
 		if (isDate) {
 			LocalDate Date = LocalDate.parse(time);
@@ -89,7 +94,6 @@ public class Command {
 	}
 
 	/**
-	 *
 	 * @param taskList the list of all tasks input
 	 * @return index the index of task that user wants to delete or mark as done
 	 * @throws OutOfIndexBound If the index > size of list
@@ -102,18 +106,22 @@ public class Command {
 		return index;
 	}
 
+
 	/**
 	 * @return true if user type "bye"
-	 * 	       false if not
+	 * false if not
 	 */
+
 	public boolean isExit() {
 		return command.equals("bye");
 	}
 
+
 	/**
 	 * Execute the command e.g. add task, print list
+	 *
 	 * @param taskList the list of all tasks input
-	 * @param storage the file stores all tasks in the list
+	 * @param storage  the file stores all tasks in the list
 	 */
 	public void execute(TaskList taskList, Storage storage) {
 		Task taskToAdd;
@@ -150,6 +158,7 @@ public class Command {
 			try {
 				String by = getTime();
 				taskToAdd = new Deadline(getTask());
+
 				((Deadline) taskToAdd).setBy(by);
 				taskList.addTask(taskToAdd);
 				storage.appendToFile(taskToAdd.text() + System.lineSeparator());
