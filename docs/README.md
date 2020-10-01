@@ -1,5 +1,5 @@
 # User Guide
-This app is to help user create and edit a task list.
+This app is to help user create, edit and store a task list.
 ### Quick start 
 1. Ensure you have Java 11 installed in your Computer.
 1. Download the jar file from (link).
@@ -15,7 +15,7 @@ If the setup is correct, you should see something like the below:
     - `list`- show the task list
     - `done 1`- mark the first task in list as done
     - `delete 2`- delete the second task in the list
-    - `exit`- exit the program
+    - `bye`- exit the program
 1. Refer to the Features below for details of each command.
 ## Features 
 - Add  
@@ -26,7 +26,7 @@ If the setup is correct, you should see something like the below:
 - Delete  `delete`
 - Mark as done `done`
 - Find `find`
-- Exit `exit`
+- Exit `bye`
 ### Add `todo`, `deadline`, `event`
 Add a new task to the task list   
 - add todo task: `todo`  
@@ -74,10 +74,22 @@ Examples: `find book`
 Expected outcomes:  
 ![find](https://github.com/zhangcaicai123/ip/blob/master/docs/image/find.png)
 
-### Exit `exit`
+### Exit `bye`
 Exit the program
-Format: `exit`
+Format: `bye`
 
 Expected outcomes:  
 ![exit](https://github.com/zhangcaicai123/ip/blob/master/docs/image/exit.png)
+
+## Command summary
+|Actions|Formats|Examples|
+|-------|-------|--------|
+|todo|`todo TASK`|`todo read a book`|
+|deadline|`deadline TASK /by TIME`|`deadline return books /by 2pm`|
+|event|`event TASK /at TIME`|`event attend the tutorial /at Friday 4pm`|
+|list|`list`||
+|delete|`delete INDEX`|`delete 2`|
+|done|`done INDEX`|`done 1`|
+|find|`find KEYWORD`|`find book`|
+|exit|`bye`||
 
