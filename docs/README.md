@@ -44,9 +44,12 @@ Expected outcomes:
 ![data file after adding](https://github.com/zhangcaicai123/ip/blob/master/docs/image/add%20file.png)  
 
 For the deadline and event,
-the app also accepts dates in a format such as yyyy-mm-dd format (e.g., 2019-10-15) and print in a different format such as MMM dd yyyy e.g., (Oct 15 2019)
-Format: `deadline TASK /by YYYY-MM-DD`
+the app also accepts dates in a format such as yyyy-mm-dd format (e.g., 2019-10-15) and print in a different format such as MMM dd yyyy e.g., (Oct 15 2019)  
+Format: `deadline TASK /by YYYY-MM-DD`  
 Examples: `deadline return books /by 2020-11-20`
+
+Expected outcomes:
+![time](https://github.com/zhangcaicai123/ip/blob/master/docs/image/time.png)
 ### List `list`
 Show the task list  
 Format: `list`
