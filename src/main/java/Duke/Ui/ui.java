@@ -1,12 +1,15 @@
 package duke.ui;
 
+import duke.task.Task;
+
 import java.util.Scanner;
 
 public class Ui {
 	public Ui() {
 	}
+
 	//print horizontal line
-	public void showLine() {
+	public static void showLine() {
 		System.out.println("    ____________________________________________________________");
 	}
 
@@ -25,6 +28,7 @@ public class Ui {
 
 	/**
 	 * Read user's command
+	 *
 	 * @return command
 	 */
 	public String readCommand() {
@@ -38,5 +42,11 @@ public class Ui {
 		System.out.println("	 There are some errors when loading file.");
 	}
 
+	public static void printMarkMessage(Task task) {
+		showLine();
+		System.out.println("     Nice! I've marked this task as done:");
+		System.out.println("       " + task);
+		showLine();
+	}
 
 }

@@ -6,7 +6,10 @@ import java.util.ArrayList;
 
 public class TaskList {
 	private ArrayList<Task> taskList = new ArrayList<>();
-	public TaskList(){}
+
+	public TaskList() {
+	}
+
 	/**
 	 * Assign the loaded list to this task list
 	 *
@@ -96,6 +99,8 @@ public class TaskList {
 	public void printNumOfTasksInList() {
 		if (this.taskList.size() == 1) {
 			System.out.println("     Now you have 1 task in the list.");
+		} else if (this.taskList.size() == 0) {
+			System.out.println("     You don't have any task in your list.");
 		} else {
 			System.out.println("     Now you have " + this.taskList.size() + " tasks in the list.");
 		}

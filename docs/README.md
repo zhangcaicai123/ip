@@ -16,8 +16,8 @@ If the setup is correct, you should see something like the below:
     - `done 1`- mark the first task in list as done
     - `delete 2`- delete the second task in the list
     - `bye`- exit the program
-1. Refer to the Features below for details of each command.
-## Features 
+1. Refer to the Features below for details of each command.  
+##Features
 - Add  
     - Add todo `todo`
     - Add deadline `deadline`

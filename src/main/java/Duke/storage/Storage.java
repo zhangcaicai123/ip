@@ -13,13 +13,15 @@ public class Storage {
 	private final String directory = projectRoot + "/data";
 	private final String filePath = directory + "/duke.txt";
 
-	public Storage(){}
+	public Storage() {
+	}
 
 	/**
 	 * Create directory if the directory does not exist
+	 *
 	 * @param directoryName directory path name
 	 * @return true if the directory exist or have been successfully created
-	 * 		   false if fail to create the directory
+	 * false if fail to create the directory
 	 */
 	public boolean createDirectory(String directoryName) {
 		File dir = new File(directoryName);
@@ -32,60 +34,37 @@ public class Storage {
 
 	/**
 	 * Create the data file to store task list
-	 * @param pathName the absolute path name of data file
+	 *
+	 * @param pathName      the absolute path name of data file
 	 * @param directoryName the directory path name
 	 */
 	public void createFile(String pathName, String directoryName) {
 		boolean mkdirs = createDirectory(directoryName);
 		if (mkdirs) {
-			 File f = new File(pathName);
+			File f = new File(pathName);
 		}
 	}
 
 	/**
 	 * Load data file to current task list
+	 *
 	 * @return loaded task list
-	 * @throws DukeException if the type of task in data file cannot be recognized
 	 */
 	public ArrayList<Task> load() throws DukeException {
 		File loadFile = new File(this.filePath);
 		ArrayList<Task> loadList = new ArrayList<>();
-		if(!loadFile.exists()){
-			createFile(this.filePath,directory);
-		} else{
+		if (!loadFile.exists()) {
+			createFile(this.filePath, directory);
+		} else {
 			Scanner file = null;
 			try {
 				file = new Scanner(loadFile);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
-			while (file.hasNext()){
+			while (file.hasNext()) {
 				String text = file.nextLine();
-				Task taskToLoad;
-				String time;
-				//split each line into task description, done status and deadline/event time
-				String[] Text = text.trim().split(" \\| " );
-				String description = Text[2];
-				String status = Text[1];
-				if(text.startsWith("T")){
-					//Todo
-					taskToLoad = new Todo(description);
-				} else if (text.startsWith("D")){
-					//Deadline
-					taskToLoad = new Deadline(description);
-					time = Text[3];
-					((Deadline) taskToLoad).setBy(time);
-				} else if (text.startsWith("E")){
-					//Event
-					taskToLoad = new Event(description);
-					time = Text[3];
-					((Event) taskToLoad).setAt(time);
-				}else{
-					throw new DukeException();
-				}
-				if(status.equals("1")) {
-					taskToLoad.markedAsDone();
-				}
+				Task taskToLoad = parserTask(text);
 				loadList.add(taskToLoad);
 			}
 			file.close();
@@ -96,8 +75,45 @@ public class Storage {
 	}
 
 	/**
+	 * Transfer the line in data file into task to load
+	 *
+	 * @param text each line of the data file
+	 * @return task need to load
+	 * @throws DukeException if the text in data file cannot recognized as a task
+	 */
+	private Task parserTask(String text) throws DukeException {
+		Task taskToLoad;
+		String time;
+		//split each line into task description, done status and deadline/event time
+		String[] Text = text.trim().split(" \\| ");
+		String description = Text[2];
+		String status = Text[1];
+		if (text.startsWith("T")) {
+			//Todo
+			taskToLoad = new Todo(description);
+		} else if (text.startsWith("D")) {
+			//Deadline
+			taskToLoad = new Deadline(description);
+			time = Text[3];
+			((Deadline) taskToLoad).setBy(time);
+		} else if (text.startsWith("E")) {
+			//Event
+			taskToLoad = new Event(description);
+			time = Text[3];
+			((Event) taskToLoad).setAt(time);
+		} else {
+			throw new DukeException();
+		}
+		if (status.equals("1")) {
+			taskToLoad.markedAsDone();
+		}
+		return taskToLoad;
+	}
+
+	/**
 	 * Update done status for the task in file
-	 * @param index the index of task in the list that needs to be marked as done
+	 *
+	 * @param index    the index of task in the list that needs to be marked as done
 	 * @param taskList the list contains all tasks
 	 * @throws IOException if cannot open, read or write the file
 	 */
@@ -129,6 +145,7 @@ public class Storage {
 
 	/**
 	 * Delete the task from data file
+	 *
 	 * @param index the index of task in the list that needs to be deleted
 	 * @throws IOException if cannot open, read or write the file
 	 */
@@ -157,6 +174,7 @@ public class Storage {
 
 	/**
 	 * Add new line to the end of data file
+	 *
 	 * @param textToAppend text needs to be added
 	 * @throws IOException if cannot open and write the file
 	 */

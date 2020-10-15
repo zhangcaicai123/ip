@@ -1,18 +1,16 @@
 package duke.command;
 
 import duke.exception.*;
+import duke.parser.Parser;
 import duke.storage.Storage;
 import duke.task.Deadline;
 import duke.task.Event;
 import duke.task.Task;
 import duke.task.Todo;
 import duke.taskList.TaskList;
+import duke.ui.Ui;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.util.Locale;
-import java.util.regex.Pattern;
-import java.time.format.DateTimeFormatter;
 
 public class Command {
 	private String command;
@@ -23,87 +21,10 @@ public class Command {
 	/**
 	 * Set user's input as command in Command class
 	 *
-	 * @param command
+	 * @param command user's command
 	 */
 	public void setCommand(String command) {
 		this.command = command;
-	}
-
-	/**
-	 * @return user's command option e.g. todo,list,bye
-	 */
-	private String getOption() {
-		if (!command.contains(" ")) return command;
-		else return command.substring(0, command.indexOf(" "));
-	}
-
-	/**
-	 * @return the description of user's input task
-	 * @throws EmptyDescriptionException If description is null
-	 */
-	private String getTask() throws EmptyDescriptionException {
-		if (!command.contains(" ")) {
-			throw new EmptyDescriptionException();
-		} else if (command.contains("/")) {
-			return command.substring(command.indexOf(" ") + 1, command.indexOf("/") - 1);
-		} else {
-			return command.substring(command.indexOf(" ") + 1);
-		}
-	}
-
-
-	/**
-	 * @return the keyword that user wants to search in the task list
-	 * @throws EmptyFindException If no keyword is found
-	 */
-	private String getFind() throws EmptyFindException {
-		if (!command.contains(" ")) {
-			throw new EmptyFindException();
-		} else {
-			return command.substring(command.indexOf(" ") + 1);
-		}
-	}
-
-
-	/**
-	 * Returns the time for event or deadline.
-	 * Accept dates in yyyy-mm-dd format (e.g., 2019-10-15)
-	 * and print in a different format such as MMM dd yyyy e.g., (Oct 15 2019)
-	 *
-	 * @return time for event or deadline task
-	 * @throws EmptyTimeException If no String for time information is found
-	 */
-	private String getTime() throws EmptyTimeException {
-		String time;
-		if (!command.contains("/")) {
-			throw new EmptyTimeException();
-		} else if (command.contains("deadline")) {
-			time = command.substring(command.indexOf("/") + "by ".length() + 1);
-		} else if (command.contains("event")) {
-			time = command.substring(command.indexOf("/") + "at ".length() + 1);
-		} else {
-			return null;
-		}
-
-		String pattern = "\\d\\d\\d\\d-\\d\\d-\\d\\d";//yyyy-mm-dd format
-		boolean isDate = Pattern.matches(pattern, time);
-		if (isDate) {
-			LocalDate Date = LocalDate.parse(time);
-			return Date.format(DateTimeFormatter.ofPattern("MMM d yyyy", Locale.ENGLISH));
-		} else return time;
-	}
-
-	/**
-	 * @param taskList the list of all tasks input
-	 * @return index the index of task that user wants to delete or mark as done
-	 * @throws OutOfIndexBound If the index > size of list
-	 */
-	private int getIndex(TaskList taskList) throws OutOfIndexBound {
-		int index = Integer.parseInt(command.substring(command.indexOf(" ") + 1));
-		if (taskList.size() < index || index < 1) {
-			throw new OutOfIndexBound();
-		}
-		return index;
 	}
 
 
@@ -124,92 +45,155 @@ public class Command {
 	 * @param storage  the file stores all tasks in the list
 	 */
 	public void execute(TaskList taskList, Storage storage) {
-		Task taskToAdd;
-		Task taskToMark;
-		String option = getOption();
+		String option = Parser.getOption(command);
 		switch (option) {
 		case "list":
 			taskList.printList();
 			break;
 		case "done":
-			try {
-				int index = getIndex(taskList) - 1;
-				taskToMark = taskList.get(index);
-				taskToMark.markedAsDone();
-				storage.updateDoneToFile(index, taskList);
-			} catch (OutOfIndexBound e) {
-				exception.printOutOfIndexBoundMessage();
-			} catch (IOException e) {
-				System.out.println("Something went wrong: " + e.getMessage());
-			}
+			done(taskList, storage);
 			break;
 		case "todo":
-			try {
-				taskToAdd = new Todo(getTask());
-				taskList.addTask(taskToAdd);
-				storage.appendToFile(taskToAdd.text() + System.lineSeparator());
-			} catch (EmptyDescriptionException e) {
-				exception.printEmptyDescriptionExceptionMessage(option);
-			} catch (IOException e) {
-				System.out.println("Something went wrong: " + e.getMessage());
-			}
+			addToDo(taskList, storage);
 			break;
 		case "deadline":
-			try {
-				String by = getTime();
-				taskToAdd = new Deadline(getTask());
-
-				((Deadline) taskToAdd).setBy(by);
-				taskList.addTask(taskToAdd);
-				storage.appendToFile(taskToAdd.text() + System.lineSeparator());
-			} catch (EmptyDescriptionException e) {
-				exception.printEmptyDescriptionExceptionMessage(option);
-			} catch (EmptyTimeException e) {
-				exception.printEmptyTimeExceptionMessage(option);
-			} catch (IOException e) {
-				System.out.println("Something went wrong: " + e.getMessage());
-			}
+			addDeadline(taskList, storage);
 			break;
 		case "event":
-			try {
-				String at = getTime();
-				taskToAdd = new Event(getTask());
-				((Event) taskToAdd).setAt(at);
-				taskList.addTask(taskToAdd);
-				storage.appendToFile(taskToAdd.text() + System.lineSeparator());
-			} catch (EmptyDescriptionException e) {
-				exception.printEmptyDescriptionExceptionMessage(option);
-			} catch (EmptyTimeException e) {
-				exception.printEmptyTimeExceptionMessage(option);
-			} catch (IOException e) {
-				System.out.println("Something went wrong: " + e.getMessage());
-			}
+			addEvent(taskList, storage);
 			break;
 		case "delete":
-			try {
-				int index = getIndex(taskList) - 1;
-				taskList.deleteTask(index);
-				storage.deleteTaskFromFile(index);
-				taskList.printNumOfTasksInList();
-			} catch (OutOfIndexBound e) {
-				exception.printOutOfIndexBoundMessage();
-			} catch (IOException e) {
-				System.out.println("Something went wrong: " + e.getMessage());
-			}
+			delete(taskList, storage);
 			break;
 		case "find":
-			try {
-				String keyword = getFind();
-				taskList.printSearchResult(keyword);
-			} catch (EmptyFindException e) {
-				System.out.println("You haven't typed the keyword");
-			}
+			find(taskList);
+			break;
 		case "bye":
 			break;
 		default:
 			exception.printIllegalCommandExceptionMessage();
+			break;
 		}
+
 
 	}
 
+	/**
+	 * Execute done command
+	 *
+	 * @param taskList the list of all tasks input
+	 * @param storage  the file stores all tasks in the list
+	 */
+	private void done(TaskList taskList, Storage storage) {
+		try {
+			int index = Parser.getIndex(taskList, command) - 1;
+			Task taskToMark = taskList.get(index);
+			taskToMark.markedAsDone();
+			Ui.printMarkMessage(taskToMark);
+			storage.updateDoneToFile(index, taskList);
+		} catch (OutOfIndexBound e) {
+			exception.printOutOfIndexBoundMessage();
+		} catch (IOException e) {
+			System.out.println("Something went wrong: " + e.getMessage());
+		} catch (EmptyIndexException e) {
+			exception.printEmptyIndexExceptionMessage();
+		}
+	}
+
+	/**
+	 * Add todo task to the task list
+	 *
+	 * @param taskList the list of all tasks input
+	 * @param storage  the file stores all tasks in the list
+	 */
+	private void addToDo(TaskList taskList, Storage storage) {
+		try {
+			Todo taskToAdd = new Todo(Parser.getTodo(command));
+			taskList.addTask(taskToAdd);
+			storage.appendToFile(taskToAdd.text() + System.lineSeparator());
+		} catch (EmptyDescriptionException e) {
+			exception.printEmptyDescriptionExceptionMessage("todo");
+		} catch (IOException e) {
+			System.out.println("Something went wrong: " + e.getMessage());
+		}
+	}
+
+	/**
+	 * Add deadline task to the task list
+	 *
+	 * @param taskList the list of all tasks input
+	 * @param storage  the file stores all tasks in the list
+	 */
+	private void addDeadline(TaskList taskList, Storage storage) {
+		try {
+			String by = Parser.getTime(command);
+			Deadline taskToAdd = new Deadline(Parser.getTask(command));
+			taskToAdd.setBy(by);
+			taskList.addTask(taskToAdd);
+			storage.appendToFile(taskToAdd.text() + System.lineSeparator());
+		} catch (EmptyDescriptionException e) {
+			exception.printEmptyDescriptionExceptionMessage("deadline");
+		} catch (EmptyTimeException e) {
+			exception.printEmptyTimeExceptionMessage("deadline");
+		} catch (IOException e) {
+			System.out.println("Something went wrong: " + e.getMessage());
+		}
+	}
+
+	/**
+	 * Add event to the task list
+	 *
+	 * @param taskList the list of all tasks input
+	 * @param storage  the file stores all tasks in the list
+	 */
+	private void addEvent(TaskList taskList, Storage storage) {
+		try {
+			String at = Parser.getTime(command);
+			Event taskToAdd = new Event(Parser.getTask(command));
+			taskToAdd.setAt(at);
+			taskList.addTask(taskToAdd);
+			storage.appendToFile(taskToAdd.text() + System.lineSeparator());
+		} catch (EmptyDescriptionException e) {
+			exception.printEmptyDescriptionExceptionMessage("event");
+		} catch (EmptyTimeException e) {
+			exception.printEmptyTimeExceptionMessage("event");
+		} catch (IOException e) {
+			System.out.println("Something went wrong: " + e.getMessage());
+		}
+	}
+
+	/**
+	 * Delete task from task list
+	 *
+	 * @param taskList the list of all tasks input
+	 * @param storage  the file stores all tasks in the list
+	 */
+	private void delete(TaskList taskList, Storage storage) {
+		try {
+			int index = Parser.getIndex(taskList, command) - 1;
+			taskList.deleteTask(index);
+			storage.deleteTaskFromFile(index);
+			taskList.printNumOfTasksInList();
+		} catch (OutOfIndexBound e) {
+			exception.printOutOfIndexBoundMessage();
+		} catch (IOException e) {
+			System.out.println("Something went wrong: " + e.getMessage());
+		} catch (EmptyIndexException e) {
+			exception.printEmptyIndexExceptionMessage();
+		}
+	}
+
+	/**
+	 * Find task in the task list with keyword
+	 *
+	 * @param taskList the list of all tasks input
+	 */
+	private void find(TaskList taskList) {
+		try {
+			String keyword = Parser.getFind(command);
+			taskList.printSearchResult(keyword);
+		} catch (EmptyFindException e) {
+			exception.printEmptyKeywordMessage();
+		}
+	}
 }
